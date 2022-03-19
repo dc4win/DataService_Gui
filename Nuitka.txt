@@ -1,0 +1,4 @@
+nuitka --mingw64 --windows-disable-console --standalone --show-progress --show-memory --plugin-enable=qt-plugins --include-package-data selenium --windows-icon-from-ico=E:\anaconda\Anaconda3\pyfiles\DataService_Gui\logo.ico --output-dir=C:\Users\DC\Desktop E:\anaconda\Anaconda3\pyfiles\DataService_Gui\UI_version_new.py
+
+2022年3月4日：
+nuitka --mingw64 --standalone --show-progress --show-memory --plugin-enable=qt-plugins --nofollow-imports --include-data-file=E:\anaconda\Anaconda3\pyfiles\DataService_Gui\chromedriver.exe=./ --windows-icon-from-ico=E:\anaconda\Anaconda3\pyfiles\DataService_Gui\logo.ico --output-dir=C:\Users\DC\Desktop E:\anaconda\Anaconda3\pyfiles\DataService_Gui\UI_version_new.py
