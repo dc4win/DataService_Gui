@@ -51,8 +51,9 @@ class Skcx():
                 wslevel = "12级"
         self.wslevel = wslevel
         return self.wslevel
+
     def Inpage(self):
-        self.browser = webdriver.Chrome(executable_path="F:\webdriver\chromedriver_win32\chromedriver.exe")
+        self.browser = webdriver.Chrome(executable_path="chromedriver.exe")
         self.browser.set_window_size(3000,2000)#设置窗口大小以保存
         self.browser.get("http://10.127.192.120/index.php")
         self.browser.refresh()

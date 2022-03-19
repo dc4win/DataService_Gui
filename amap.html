@@ -1,0 +1,325 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>输入提示后查询</title>
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode:'0501b6504db3a5dd403f52b85094eea1',
+        }
+    </script>
+    <!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b0f98e823d246c31aefd360f909c39b8&plugin=AMap.MouseTool"></script> -->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=b0f98e823d246c31aefd360f909c39b8&plugin=AMap.Autocomplete,AMap.PlaceSearch"></script>
+<!--     <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+    <style>
+    html, body, #container {
+        height: 100%;
+        width: 100%;
+    }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div id="myPageTop">
+    <table>
+        <tr>
+            <td>
+                <input id="tipinput" placeholder="请输入目标位置"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="input-card">
+    <h4>距离最近站点：</h4>
+    <div class="input-item">
+      <input type="text" readonly="true" id="lnglat">
+    </div>
+</div>
+<script type="text/javascript">
+    //地图加载
+var map = new AMap.Map("container", {
+    resizeEnable: true,
+    center: [119.424, 32.188],
+    zoom:14,
+    features: ['bg', 'road', 'building']
+});
+var markers=[
+    {
+    position:[119.0769444,32.13388889],
+    label:"宝华山"
+    },
+    {
+    position:[119.187385,32.158417],
+    label:"下蜀镇"
+    },
+    {
+    position:[119.140278,32.067877],
+    label:"固江口水库"},
+    {
+    position:[119.184025,32.075546],
+    label:"北山水库"},
+    {
+    position:[119.30509,32.052306],
+    label:"边城镇"},
+    {
+    position:[119.302775,31.966546],
+    label:"白兔镇"},
+    {
+    position:[119.208173,31.958455],
+    label:"句容"},
+    {
+    position:[119.317897,31.900701],
+    label:"茅山镇"},
+    {
+    position:[119.197037,31.868943],
+    label:"二圣水库"},
+    {
+    position:[119.126778,31.83991],
+    label:"赤山湖"},
+    {
+    position:[119.028081,31.80761],
+    label:"郭庄镇"},
+    {
+    position:[119.216043,31.807134],
+    label:"后白镇"},
+    {
+    position:[119.248625,31.779686],
+    label:"茅山管委会"},
+    {
+    position:[119.214422,31.743708],
+    label:"天王镇"},
+    {
+    position:[119.301454,31.695485],
+    label:"李塔水库"},
+    {
+    position:[119.295509,32.224399],
+    label:"世业镇"},
+    {
+    position:[119.307259,32.183401],
+    label:"高资码头"},
+    {
+    position:[119.305527,32.166322],
+    label:"高资街道"},
+    {
+    position:[119.378592,32.118843],
+    label:"宜城街道"},
+    {
+    position:[119.368127,32.067889],
+    label:"上党五塘村"},
+    {
+    position:[119.411514,32.074344],
+    label:"上党镇"},
+    {
+    position:[119.367429,31.926097],
+    label:"宝堰镇"},
+    {
+    position:[119.407355,31.867142],
+    label:"荣炳园区"},
+    {
+    position:[119.494776,32.103851],
+    label:"谷阳镇"},
+    {
+    position:[119.572165,32.124358],
+    label:"辛丰镇"},
+    {
+    position:[119.417995,32.241067],
+    label:"征润州"},
+    {
+    position:[119.4533333,32.21638889],
+    label:"北固山"},
+    {
+    position:[119.503692,32.233087],
+    label:"焦南坝"},
+    {
+    position:[119.502098,32.14994],
+    label:"镇江"},
+    {
+    position:[119.513857,32.162511],
+    label:"丁卯街道"},
+    {
+    position:[119.529241,32.186906],
+    label:"象山街道"},
+    {
+    position:[119.574602,32.162796],
+    label:"谏壁街道"},
+    {
+    position:[119.585822,32.207459],
+    label:"江心园区"},
+    {
+    position:[119.62495,32.1861],
+    label:"孩溪汽渡"},
+    {
+    position:[119.652165,32.230564],
+    label:"高桥镇"},
+    {
+    position:[119.675734,32.169923],
+    label:"大港街道"},
+    {
+    position:[119.711811,32.14366],
+    label:"丁岗镇"},
+    {
+    position:[119.730796,32.162472],
+    label:"大路农业园"},
+    {
+    position:[119.744833,32.213967],
+    label:"大路镇"},
+    {
+    position:[119.773715,32.162057],
+    label:"姚桥镇"},
+    {
+    position:[119.67754,32.101143],
+    label:"埤城生态园"},
+    {
+    position:[119.477983,32.042036],
+    label:"司徒镇"},
+    {
+    position:[119.469796,32.022424],
+    label:"司徒农业园"},
+    {
+    position:[119.445713,32.005854],
+    label:"司徒固村"},
+    {
+    position:[119.444458,31.886893],
+    label:"延陵镇"},
+    {
+    position:[119.565003,31.97962],
+    label:"云阳街道"},
+    {
+    position:[119.597644,31.980539],
+    label:"丹阳"},
+    {
+    position:[119.576788,31.874344],
+    label:"珥陵镇"},
+    {
+    position:[119.653283,31.958305],
+    label:"陵口镇"},
+    {
+    position:[119.679776,31.858514],
+    label:"导墅镇"},
+    {
+    position:[119.743088,31.857444],
+    label:"吕城镇"},
+    {
+    position:[119.708358,31.777604],
+    label:"皇塘镇"},
+    {
+    position:[119.71875,31.983042],
+    label:"访仙镇"},
+    {
+    position:[119.810184,32.067631],
+    label:"丹北新桥社区"},
+    {
+    position:[119.880112,32.07324],
+    label:"界牌镇"},
+    {
+    position:[119.797813,32.104801],
+    label:"丹北镇"},
+    {
+    position:[119.70868,32.104707],
+    label:"丹北埤城村"},
+    {
+    position:[119.760149,32.267542],
+    label:"新坝镇"},
+    {
+    position:[119.802693,32.272295],
+    label:"扬中"},
+    {
+    position:[119.763075,32.315173],
+    label:"雷公岛"},
+    {
+    position:[119.811023,32.296238],
+    label:"三茅永和村"},
+    {
+    position:[119.850677,32.230164],
+    label:"泰州大桥"},
+    {
+    position:[119.841146,32.188942],
+    label:"兴隆街道"},
+    {
+    position:[119.841312,32.11014],
+    label:"油坊镇"},
+    {
+    position:[119.892001,32.103473],
+    label:"八桥镇"},
+    {
+    position:[119.901207,32.030705],
+    label:"西来桥镇"}
+    ];
+markers.forEach(function(marker1) {
+  var marker =new AMap.Marker({
+      map: map,
+      position: [marker1.position[0], marker1.position[1]],
+      label:{content:marker1.label,direction:'top'}
+      });
+
+  map.add(marker);
+  marker.on('rightclick',function(){
+      document.getElementById("lnglat").value = marker1.label
+  });});
+
+// alert(markers[1].position[0]);
+
+  // marker.on('click',function(){alert(marker.getLabel())});
+//点击操作对应的响应函数/槽函数：
+var markers0 = [];
+var clickHandler = function(e){
+
+map.remove(markers0);
+var marker = new AMap.Marker({
+    position: [e.lnglat.getLng(),e.lnglat.getLat()],
+    draggable:true,
+});
+markers0.push(marker);
+map.add(marker);//把点标记在地图上
+var getCloseStation=function() {
+var n = markers.length;
+var min = 200;
+    for (var i = 0; i < n; i++) {
+        var distance = ((marker.getPosition().getLng() - markers[i].position[0])** 2)+((marker.getPosition().getLat() - markers[i].position[1])**2);
+        if (distance < min) {
+            min = distance;
+            stationname = markers[i].label;
+        }
+    }
+    return stationname
+};
+    var station = getCloseStation();
+    marker.on('click', function() {
+        document.getElementById("lnglat").value = station
+    });
+
+};
+    //绑定地图单击事件:
+map.on('click', clickHandler);
+
+    //输入提示
+    var autoOptions = {
+        city:'镇江', 
+        input:"tipinput"
+    };
+
+    <!-- AMap.plugin(['AMap.PlaceSearch','AMap.AutoComplete'], function(d){ -->
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map:map,
+            city:'镇江',
+            citylimit:true,
+        });  //构造地点查询类
+        // <!-- auto.on("select", select);//注册监听，当选中某条记录时会触发 -->
+       AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+       function select(c) {
+            placeSearch.setCity(c.poi.adcode);
+            placeSearch.search(c.poi.name);  //关键字查询查询
+    }
+var getValue= function () {
+    aa=document.getElementById("lnglat").value;
+    return aa
+}
+getValue();
+</script>
+</body>
+</html>
