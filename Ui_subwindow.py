@@ -12,9 +12,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import  QWidget
 
 
-class Ui_widget(QWidget):
+class TextWindow(QWidget):
     def __init__(self):
-        super.__init__()
+        super().__init__()
         self.setWindowTitle('内容编辑')
         self.resize(810, 378)
         self.initUI()
@@ -59,6 +59,7 @@ class Ui_widget(QWidget):
         self.pushButton_savepath.setFont(font)
         self.pushButton_savepath.setObjectName("pushButton_savepath")
         self.horizontalLayout.addWidget(self.pushButton_savepath)
+        self.pushButton_savepath.clicked.connect(QFileDialog)
         self.lineEdit_savepath = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_savepath.setEnabled(True)
         font = QtGui.QFont()
@@ -94,7 +95,7 @@ class Ui_widget(QWidget):
         font.setFamily("楷体")
         font.setPointSize(10)
         self.lineEdit_client.setFont(font)
-        self.lineEdit_client.setText("")
+        self.lineEdit_client.setText(client)
         self.lineEdit_client.setObjectName("lineEdit_client")
         self.horizontalLayout_3.addWidget(self.lineEdit_client)
         self.label = QtWidgets.QLabel(self.widget)
@@ -179,8 +180,8 @@ class Ui_widget(QWidget):
         self.pushButton.setText("生成Word")
         self.pushButton_2.setText("打开Word")
         self.pushButton_savepath.setText("保存路径")
-        self.label_2.setText( "申请人：")
+        self.label_2.setText("申请人：")
         self.label.setText("编号：")
-        self.label_3.setText( "时间：")
-        self.label_5.setText( "地点：")
+        self.label_3.setText("时间：")
+        self.label_5.setText("地点：")
         self.label_4.setText("天气状况：")

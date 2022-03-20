@@ -17,12 +17,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl,Qt
-from PyQt5.QtWidgets import QWidget,QApplication,QTableWidgetItem,QHeaderView,QMessageBox
+from PyQt5.QtWidgets import QWidget,QApplication,QTableWidgetItem,QHeaderView,QMessageBox,QFileDialog
 import numpy as np
 from win32com import client as wc
-import docx
 import pandas as pd
-
+import pickle
+import glob
+import os
 
 class Meteo_DataService(QWidget):
     def __init__(self):
@@ -886,7 +887,7 @@ class Meteo_DataService(QWidget):
         self.label_11.setText('sum:')
         self.label_12.setText('avg:')
         self.label_len.setText('count:')
-        self.textwindow = TextWindow()
+
         ##Button信号槽绑定
         self.Confirm_Button.clicked.connect(self.station_runjs)
         self.Runpage_Button.clicked.connect(self.Runpage)
@@ -896,7 +897,7 @@ class Meteo_DataService(QWidget):
         self.Hourly_tableWidget.itemSelectionChanged.connect(lambda:self.compute_choosen_values(self.Hourly_tableWidget))
         self.Daily_tableWidget.itemSelectionChanged.connect(lambda: self.compute_choosen_values(self.Daily_tableWidget))
         self.buttonGroup.buttonToggled.connect(self.Preview)
-
+        client = self.Client_LineEdit.text()
 
     def Generate(self):
         items = self.Hourly_tableWidget.selectedItems()
@@ -937,7 +938,7 @@ class Meteo_DataService(QWidget):
                                                count,self.buttonGroup.checkedButton().text(),self.MinValue_LineEdit.text(),self.MinValue_LineEdit_2.text(),len(tar_datetime_list))
             for idatetime,item in zip(tar_datetime_list,tar_items_list):
                 text_str += ':'.join([idatetime,str(item)+','])
-
+        self.textwindow = TextWindow('句容')
         self.textwindow.show()
 
 
@@ -985,7 +986,7 @@ class Meteo_DataService(QWidget):
         tablewidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
         tablewidget.horizontalHeader().setStretchLastSection(True)
     def Runpage(self):
-        self.browser = Chrome(executable_path="F:\webdriver\chromedriver_win32\chromedriver.exe")
+        self.browser = Chrome(executable_path="chromedriver.exe")
         self.browser.set_window_size(3000, 2000)  # 设置窗口大小以保存
         self.browser.get("http://10.127.192.120/index.php")
         self.browser.find_element_by_xpath('/html/body/center/table[3]/tbody/tr[6]/td[1]/li[3]/a').click()
@@ -1041,13 +1042,19 @@ class Meteo_DataService(QWidget):
         self.NowDate = self.year + self.month + self.day
         self.Makedate_LineEdit.setText(str(self.NowDate))
 
-class TextWindow(QWidget,client,date,number,location,condition):
-    def __init__(self):
+class TextWindow(QWidget):
+    def __init__(self,*args):
         super().__init__()
         self.setWindowTitle('内容编辑')
         self.resize(810, 378)
-        self.initUI()
-    def initUI(self):
+        pathfile = open('output_path.pkl','rb')
+        self.path = pickle.load(pathfile)
+        existfiles = glob.glob(self.path + '*.docx')
+        self.number=['0'+str(len(existfiles)+1) if len(existfiles)<9 else str(len(existfiles)+1)][0]
+        self.series_number = self.path[-4:]+self.number
+        self.path=self.path+self.number+args[0]+'.docx'
+        self.initUI(self.path,self.series_number,args)
+    def initUI(self,path,number,args):
         self.setObjectName("widget")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1088,6 +1095,7 @@ class TextWindow(QWidget,client,date,number,location,condition):
         self.pushButton_savepath.setFont(font)
         self.pushButton_savepath.setObjectName("pushButton_savepath")
         self.horizontalLayout.addWidget(self.pushButton_savepath)
+        self.pushButton_savepath.clicked.connect(lambda:self.Savepath_button_click(args[0]))
         self.lineEdit_savepath = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_savepath.setEnabled(True)
         font = QtGui.QFont()
@@ -1096,6 +1104,7 @@ class TextWindow(QWidget,client,date,number,location,condition):
         self.lineEdit_savepath.setFont(font)
         self.lineEdit_savepath.setObjectName("lineEdit_savepath")
         self.horizontalLayout.addWidget(self.lineEdit_savepath)
+        self.lineEdit_savepath.setText(path)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -1123,7 +1132,7 @@ class TextWindow(QWidget,client,date,number,location,condition):
         font.setFamily("楷体")
         font.setPointSize(10)
         self.lineEdit_client.setFont(font)
-        self.lineEdit_client.setText("")
+        self.lineEdit_client.setText(args[0])
         self.lineEdit_client.setObjectName("lineEdit_client")
         self.horizontalLayout_3.addWidget(self.lineEdit_client)
         self.label = QtWidgets.QLabel(self.widget)
@@ -1204,15 +1213,32 @@ class TextWindow(QWidget,client,date,number,location,condition):
         self.textEdit_weatherCondition.setObjectName("textEdit_weatherCondition")
         self.horizontalLayout_2.addWidget(self.textEdit_weatherCondition)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-
+        self.lineEdit_number.setText(number)
         self.pushButton.setText("生成Word")
         self.pushButton_2.setText("打开Word")
-        self.pushButton_savepath.setText("保存路径")
+        self.pushButton_savepath.setText("选择文件夹")
         self.label_2.setText("申请人：")
         self.label.setText("编号：")
         self.label_3.setText("时间：")
         self.label_5.setText("地点：")
         self.label_4.setText("天气状况：")
+        self.lineEdit_client.textChanged.connect(lambda: self.Client_changed(self.lineEdit_client.text()))
+
+    def Client_changed(self,client):
+        path0=self.lineEdit_savepath.text().split(os.sep)[0]
+        path1 = self.lineEdit_savepath.text().split('.')[0].split(os.sep)[1][:10]
+        self.lineEdit_savepath.setText(path0+os.sep+path1+client+'.docx')
+
+    def Savepath_button_click(self,client):
+        dir_choose = QFileDialog.getExistingDirectory(self,'选取文件夹',self.path)
+        tpath = dir_choose+os.sep+'气象证明'+str(datetime.datetime.now().year)
+        out = open('output_path.pkl','wb')
+        pickle.dump(tpath,out)
+        existfiles = glob.glob(tpath+'*.docx')
+        number=['0'+str(len(existfiles)+1) if len(existfiles)<9 else str(len(existfiles)+1)][0]
+        targetpath=tpath+number+client+'.docx'
+        self.lineEdit_savepath.setText(targetpath)
+        self.lineEdit_number.setText(str(datetime.datetime.now().year)+number)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
