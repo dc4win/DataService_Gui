@@ -29,7 +29,7 @@ class Meteo_DataService(QWidget):
     def __init__(self):
         super(Meteo_DataService,self).__init__()
         self.setWindowTitle('镇江气象资料证明业务应用软件 V1.0')
-        self.resize(1430,618)
+        self.resize(1466,618)
         self.initUI()
     def initUI(self):
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -532,6 +532,7 @@ class Meteo_DataService(QWidget):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.gridFrame)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.HeavyRain_Button = QtWidgets.QPushButton(self.gridFrame)
+        self.HeavyRain_Button.setToolTip('12小时:30~69mm\n24小时:50~99mm')
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -566,6 +567,7 @@ class Meteo_DataService(QWidget):
 "\n"
 "}")
         self.BigWind_Button.setObjectName("BigWind_Button")
+        self.BigWind_Button.setToolTip('极大风≥17.2m/s')
         self.gridLayout_2.addWidget(self.BigWind_Button, 0, 1, 1, 1)
         self.LowTemp_Button = QtWidgets.QPushButton(self.gridFrame)
         font = QtGui.QFont()
@@ -584,8 +586,10 @@ class Meteo_DataService(QWidget):
 "\n"
 "}")
         self.LowTemp_Button.setObjectName("LowTemp_Button")
+        self.LowTemp_Button.setToolTip('日最低气温≤0℃')
         self.gridLayout_2.addWidget(self.LowTemp_Button, 0, 2, 1, 1)
         self.HighTemp_Button = QtWidgets.QPushButton(self.gridFrame)
+        self.HighTemp_Button.setToolTip('日最高气温≥35℃')
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -620,6 +624,7 @@ class Meteo_DataService(QWidget):
 "\n"
 "}")
         self.HeavySnow_Button.setObjectName("HeavySnow_Button")
+        self.HeavySnow_Button.setToolTip('12小时:≥6mm\n24小时:≥10mm')
         self.gridLayout_2.addWidget(self.HeavySnow_Button, 1, 1, 1, 1)
         self.BigWind_Button_2 = QtWidgets.QPushButton(self.gridFrame)
         font = QtGui.QFont()
@@ -638,6 +643,7 @@ class Meteo_DataService(QWidget):
 "\n"
 "}")
         self.BigWind_Button_2.setObjectName("BigWind_Button_2")
+        self.BigWind_Button_2.setToolTip('500~1000m')
         self.gridLayout_2.addWidget(self.BigWind_Button_2, 1, 2, 1, 1)
         self.label_4 = QtWidgets.QLabel(self.widget)
         self.label_4.setGeometry(QtCore.QRect(10, 20, 481, 21))
@@ -770,14 +776,14 @@ class Meteo_DataService(QWidget):
         self.Confirm_Button.setObjectName("Confirm_Button")
         self.verticalLayout.addWidget(self.Confirm_Button)
         self.Hourly_tableWidget = QtWidgets.QTableWidget(self)
-        self.Hourly_tableWidget.setGeometry(QtCore.QRect(1110, 21, 316, 351))
+        self.Hourly_tableWidget.setGeometry(QtCore.QRect(1110, 21, 352, 351))
         self.Hourly_tableWidget.setStyleSheet("border:2px solid;\n"
 "border-radius:5px")
         self.Hourly_tableWidget.setObjectName("Hourly_tableWidget")
         self.Hourly_tableWidget.setColumnCount(0)
         self.Hourly_tableWidget.setRowCount(0)
         self.Daily_tableWidget = QtWidgets.QTableWidget(self)
-        self.Daily_tableWidget.setGeometry(QtCore.QRect(1110, 380, 316, 181))
+        self.Daily_tableWidget.setGeometry(QtCore.QRect(1110, 380, 352, 181))
         self.Daily_tableWidget.setStyleSheet("border:2px solid;\n"
 "border-radius:5px")
         self.Daily_tableWidget.setObjectName("Daily_tableWidget")
@@ -891,28 +897,43 @@ class Meteo_DataService(QWidget):
         ##Button信号槽绑定
         self.Confirm_Button.clicked.connect(self.station_runjs)
         self.Runpage_Button.clicked.connect(self.Runpage)
-        self.Generate_Button.clicked.connect(self.Generate)
+        hdate = self.Starttime_DateEdit.date().toString('yyyy年MM月dd日')
+        self.Generate_Button.clicked.connect(lambda: self.Generate(self.Client_LineEdit.text(),
+                                                                   self.Usage_Combox.currentText(),self.Makedate_LineEdit.text(),
+                                                                  hdate))
         self.Preview_Button.clicked.connect(self.Preview)
 
         self.Hourly_tableWidget.itemSelectionChanged.connect(lambda:self.compute_choosen_values(self.Hourly_tableWidget))
         self.Daily_tableWidget.itemSelectionChanged.connect(lambda: self.compute_choosen_values(self.Daily_tableWidget))
         self.buttonGroup.buttonToggled.connect(self.Preview)
-        client = self.Client_LineEdit.text()
 
-    def Generate(self):
-        items = self.Hourly_tableWidget.selectedItems()
+    def Generate(self,client,location,mdate,hdate):
+        if self.Condition_Combox.currentText() =='日值':
+            tablewidget= self.Daily_tableWidget
+        else:
+            tablewidget=self.Hourly_tableWidget
+        items = tablewidget.selectedItems()
         if len(items)!=0:
-            datetime_list = [self.Hourly_tableWidget.item(item.row(), 0).text() for item in items]
+            datetime_list = [tablewidget.item(item.row(), 0).text() for item in items]
             items_list = [float(item.text()) for item in items]
         else:
-            datetime_list = [self.Hourly_tableWidget.item(row, 0).text() for row in range(self.Hourly_tableWidget.rowCount())]
-            items_list = [float(self.Hourly_tableWidget.item(row, 1).text()) for row in range(self.Hourly_tableWidget.rowCount())]
+            datetime_list = [tablewidget.item(row, 0).text() for row in range(tablewidget.rowCount())]
+            items_list = [float(tablewidget.item(row, 1).text()) for row in range(tablewidget.rowCount())]
             QMessageBox.information(self, '提示', '请选中时段!')
 
-        min = self.min_label.text()
-        max = self.max_label.text()
-        avg = self.avg_label.text()
-        sum = self.sum_label.text()
+        if '气温' in self.buttonGroup.checkedButton().text():
+            unit = "℃"
+        elif '水' in self.buttonGroup.checkedButton().text():
+            unit = 'mm'
+        elif '风' in self.buttonGroup.checkedButton().text():
+            unit = 'm/s'
+        else:
+            unit = 'm'
+
+        min = self.min_label.text()+unit
+        max = self.max_label.text()+unit
+        avg = self.avg_label.text()+unit
+        sum = self.sum_label.text() +unit
         count =self.len_label.text()
         if (self.MinValue_LineEdit.text()=='') & (self.MinValue_LineEdit_2.text()==''):
             text_str = '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}小时/天，{}最小值为{}，最大值为{}，' \
@@ -935,10 +956,10 @@ class Meteo_DataService(QWidget):
             tar_datetime_list = [idatetime.split('-')[1]+'月'+idatetime.split('-')[2].split(' ')[0]+'日' if len(idatetime)<10
         else idatetime.split('-')[2].split(' ')[0]+'日'+idatetime.split(' ')[1].replace(':00','时') for idatetime in tar_datetime_list ]
             text_str =  '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}小时/天，满足{}大于等于{}小于等于{}的日数/小时数共有{}天/小时，具体为'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
-                                               count,self.buttonGroup.checkedButton().text(),self.MinValue_LineEdit.text(),self.MinValue_LineEdit_2.text(),len(tar_datetime_list))
+                                               count,self.buttonGroup.checkedButton().text(),self.MinValue_LineEdit.text()+unit,self.MinValue_LineEdit_2.text()+unit,len(tar_datetime_list))
             for idatetime,item in zip(tar_datetime_list,tar_items_list):
                 text_str += ':'.join([idatetime,str(item)+','])
-        self.textwindow = TextWindow('句容')
+        self.textwindow = TextWindow(client,location,mdate,hdate,text_str)
         self.textwindow.show()
 
 
@@ -955,8 +976,8 @@ class Meteo_DataService(QWidget):
             print(e)
 
         self.selectedCon = self.Condition_Combox.currentText()
-        self.data_to_tablewidget(self.Hourly_tableWidget,self.hourdata,timestr="%Y-%m-%d %H:%M")
-        self.data_to_tablewidget(self.Daily_tableWidget,self.daydata,timestr="%Y-%m-%d")
+        self.data_to_tablewidget(self.Hourly_tableWidget,self.hourdata,timestr="%Y.%m-%d_ %H:%M")
+        self.data_to_tablewidget(self.Daily_tableWidget,self.daydata,timestr="%Y.%m-%d_")
 
 
 
@@ -974,7 +995,7 @@ class Meteo_DataService(QWidget):
         tablewidget.setRowCount(data.shape[0])
         self.selectedInfo = self.buttonGroup.checkedButton().text()
         for row in range(data.shape[0]):
-             newItem0 = QTableWidgetItem(data.index.tolist()[row].strftime(timestr))
+             newItem0 = QTableWidgetItem(data.index.tolist()[row].strftime(timestr).replace('.','年').replace('-','月').replace('_','日'))
              newItem0.setFlags(Qt.ItemIsSelectable)
              newItem = QTableWidgetItem(data[self.selectedInfo].values[row])
              newItem.setTextAlignment(Qt.AlignCenter | Qt.AlignBottom)
@@ -1099,8 +1120,8 @@ class TextWindow(QWidget):
         self.lineEdit_savepath = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_savepath.setEnabled(True)
         font = QtGui.QFont()
-        font.setFamily("Adobe Arabic")
-        font.setPointSize(10)
+        font.setFamily("Times New Roman")
+        font.setPointSize(12)
         self.lineEdit_savepath.setFont(font)
         self.lineEdit_savepath.setObjectName("lineEdit_savepath")
         self.horizontalLayout.addWidget(self.lineEdit_savepath)
@@ -1209,8 +1230,12 @@ class TextWindow(QWidget):
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.horizontalLayout_2.addWidget(self.label_4)
+        font1 = QtGui.QFont()
+        font1.setFamily("楷体")
+        font1.setPointSize(18)
         self.textEdit_weatherCondition = QtWidgets.QTextEdit(self.widget)
         self.textEdit_weatherCondition.setObjectName("textEdit_weatherCondition")
+        self.textEdit_weatherCondition.setFont(font1)
         self.horizontalLayout_2.addWidget(self.textEdit_weatherCondition)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.lineEdit_number.setText(number)
@@ -1222,6 +1247,9 @@ class TextWindow(QWidget):
         self.label_3.setText("时间：")
         self.label_5.setText("地点：")
         self.label_4.setText("天气状况：")
+        self.lineEdit_date.setText(args[3])
+        self.lineEdit_location.setText(args[1])
+        self.textEdit_weatherCondition.setText(args[4])
         self.lineEdit_client.textChanged.connect(lambda: self.Client_changed(self.lineEdit_client.text()))
 
     def Client_changed(self,client):
