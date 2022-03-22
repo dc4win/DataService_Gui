@@ -906,6 +906,19 @@ class Meteo_DataService(QWidget):
         self.Hourly_tableWidget.itemSelectionChanged.connect(lambda:self.compute_choosen_values(self.Hourly_tableWidget))
         self.Daily_tableWidget.itemSelectionChanged.connect(lambda: self.compute_choosen_values(self.Daily_tableWidget))
         self.buttonGroup.buttonToggled.connect(self.Preview)
+        self.HeavyRain_Button.setCheckable(True)
+        self.HeavyRain_Button.toggle()
+        self.HeavyRain_Button.clicked.connect(self.Heavy_rain_12)
+
+    def Heavy_rain_12(self):
+        self.RainFall_CB.setChecked(1)
+        self.Condition_Combox.setCurrentText('小时值')
+        if self.HeavyRain_Button.isChecked():
+            self.HeavyRain_Button.setText('12h')
+            self.Hourly_tableWidget.itemSelectionChanged.connect()
+        else:
+            self.HeavyRain_Button.setText('24h')
+            items = self.Hourly_tableWidget.selectedItems()
 
     def Generate(self,client,location,mdate,hdate):
         if self.Condition_Combox.currentText() =='日值':
