@@ -531,7 +531,7 @@ class Meteo_DataService(QWidget):
         self.gridFrame.setObjectName("gridFrame")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.gridFrame)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.HeavyRain_Button = RightClickButton(self.gridFrame)
+        self.HeavyRain_Button = QtWidgets.QPushButton(self.gridFrame)
         self.HeavyRain_Button.setToolTip('12小时:30~69mm\n24小时:50~99mm')
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
@@ -540,14 +540,19 @@ class Meteo_DataService(QWidget):
         font.setItalic(False)
         font.setWeight(10)
         self.HeavyRain_Button.setFont(font)
-        self.HeavyRain_Button.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(255, 170, 0);\n"
-"border-radius:10px;\n"
-"border-color: rgba(85, 85, 127, 240);\n"
-"font: 80 10pt \"微软雅黑\";\n"
-"color: rgb(255, 255, 255);\n"
-"\n"
-"}")
+        # self.HeavyRain_Button.setDefault(True)
+        self.HeavyRain_Button.setStyleSheet('''
+        QPushButton{background-color: rgb(255, 170, 0);border-radius:10px;
+        border-color: rgba(85, 85, 127, 240);
+        font: 80 10pt 微软雅黑;
+        color: rgb(255, 255, 255);
+        }
+        QPushButton:checked{background-color: rgb(255, 0, 0);border-radius:10px;
+        border-color: rgba(85, 85, 127, 240);
+        font: 80 10pt 微软雅黑;
+        color: rgb(255, 255, 255);
+        }
+        ''')
         self.HeavyRain_Button.setObjectName("HeavyRain_Button")
         self.gridLayout_2.addWidget(self.HeavyRain_Button, 0, 0, 1, 1)
         self.BigWind_Button = QtWidgets.QPushButton(self.gridFrame)
@@ -615,6 +620,7 @@ class Meteo_DataService(QWidget):
         font.setItalic(False)
         font.setWeight(10)
         self.HeavySnow_Button.setFont(font)
+
         self.HeavySnow_Button.setStyleSheet("QPushButton{\n"
 "background-color: rgb(0, 165, 248);\n"
 "border-radius:10px;\n"
@@ -909,10 +915,10 @@ class Meteo_DataService(QWidget):
         self.HeavyRain_Button.setCheckable(True)
         self.HeavyRain_Button.toggle()
         self.HeavyRain_Button.clicked.connect(self.Heavy_rain_12)
-        self.HeavyRain_Button.rightclicked.connect(self.Heavy_rain_12)
+        # self.HeavyRain_Button.rightclicked.connect(self.Heavy_rain_12)
 
 
-    def Heavy_rain_12(self,pressed):
+    def Heavy_rain_12(self):
         self.RainFall_CB.setChecked(1)
         self.Condition_Combox.setCurrentText('小时值')
         if self.HeavyRain_Button.isChecked():
@@ -1303,16 +1309,16 @@ class TextWindow(QWidget):
 
 class RightClickButton(QtWidgets.QPushButton):
     rightclicked = QtCore.pyqtSignal(bool)  # 定义带参信号
-    clicked = Qt
+    clicked = QtCore.pyqtSignal(bool)
     def __init__(self, parent=None):
         super(QtWidgets.QPushButton, self).__init__(parent)
 
     def mousePressEvent(self, event):  # 重定义该函数，对不同的操作释放不同的信号参数
-
-        # if event.buttons() == Qt.LeftButton:
-        #     self.rightclicked.emit(True)
+        if event.buttons() == Qt.LeftButton:
+            self.rightclicked.emit(True)
         if event.buttons() == Qt.RightButton:
             self.rightclicked.emit(True)
+    # def mouse
 
 
 if __name__ == '__main__':
