@@ -369,42 +369,42 @@ class Meteo_DataService(QWidget):
         self.HighTemp_CB.setObjectName("HighTemp_CB")
         self.buttonGroup = QtWidgets.QButtonGroup(self)
         self.buttonGroup.setObjectName("buttonGroup")
-        self.buttonGroup.addButton(self.HighTemp_CB)
+        self.buttonGroup.addButton(self.HighTemp_CB,1)
         self.gridLayout.addWidget(self.HighTemp_CB, 0, 1, 1, 1)
         self.MaxSpeed_CB = QtWidgets.QCheckBox(self.gridWidget)
         font = QtGui.QFont()
         font.setFamily("幼圆")
         self.MaxSpeed_CB.setFont(font)
         self.MaxSpeed_CB.setObjectName("MaxSpeed_CB")
-        self.buttonGroup.addButton(self.MaxSpeed_CB)
+        self.buttonGroup.addButton(self.MaxSpeed_CB,5)
         self.gridLayout.addWidget(self.MaxSpeed_CB, 1, 2, 1, 1)
         self.LowTemp_CB = QtWidgets.QCheckBox(self.gridWidget)
         font = QtGui.QFont()
         font.setFamily("幼圆")
         self.LowTemp_CB.setFont(font)
         self.LowTemp_CB.setObjectName("LowTemp_CB")
-        self.buttonGroup.addButton(self.LowTemp_CB)
+        self.buttonGroup.addButton(self.LowTemp_CB,2)
         self.gridLayout.addWidget(self.LowTemp_CB, 0, 2, 1, 1)
         self.Visibility_CB = QtWidgets.QCheckBox(self.gridWidget)
         font = QtGui.QFont()
         font.setFamily("幼圆")
         self.Visibility_CB.setFont(font)
         self.Visibility_CB.setObjectName("Visibility_CB")
-        self.buttonGroup.addButton(self.Visibility_CB)
+        self.buttonGroup.addButton(self.Visibility_CB,4)
         self.gridLayout.addWidget(self.Visibility_CB, 1, 1, 1, 1)
         self.RainFall_CB = QtWidgets.QCheckBox(self.gridWidget)
         font = QtGui.QFont()
         font.setFamily("幼圆")
         self.RainFall_CB.setFont(font)
         self.RainFall_CB.setObjectName("RainFall_CB")
-        self.buttonGroup.addButton(self.RainFall_CB)
+        self.buttonGroup.addButton(self.RainFall_CB,3)
         self.gridLayout.addWidget(self.RainFall_CB, 1, 0, 1, 1)
         self.HourTemp_CB = QtWidgets.QCheckBox(self.gridWidget)
         font = QtGui.QFont()
         font.setFamily("幼圆")
         self.HourTemp_CB.setFont(font)
         self.HourTemp_CB.setObjectName("HourTemp_CB")
-        self.buttonGroup.addButton(self.HourTemp_CB)
+        self.buttonGroup.addButton(self.HourTemp_CB,0)
         self.HourTemp_CB.setChecked(True)
         self.gridLayout.addWidget(self.HourTemp_CB, 0, 0, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.widget)
@@ -555,7 +555,7 @@ class Meteo_DataService(QWidget):
         ''')
         self.HeavyRain_Button.setObjectName("暴雨")
         self.gridLayout_2.addWidget(self.HeavyRain_Button, 0, 0, 1, 1)
-        self.BigWind_Button = QtWidgets.QPushButton(self.gridFrame)
+        self.BigWind_Button =NewPushButton(self.gridFrame)
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -571,10 +571,10 @@ class Meteo_DataService(QWidget):
 "color: rgb(255, 255, 255);\n"
 "\n"
 "}")
-        self.BigWind_Button.setObjectName("BigWind_Button")
+        self.BigWind_Button.setObjectName("大风")
         self.BigWind_Button.setToolTip('极大风≥17.2m/s')
         self.gridLayout_2.addWidget(self.BigWind_Button, 0, 1, 1, 1)
-        self.LowTemp_Button = QtWidgets.QPushButton(self.gridFrame)
+        self.LowTemp_Button = NewPushButton(self.gridFrame)
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -590,10 +590,10 @@ class Meteo_DataService(QWidget):
 "color: rgb(255, 255, 255);\n"
 "\n"
 "}")
-        self.LowTemp_Button.setObjectName("LowTemp_Button")
+        self.LowTemp_Button.setObjectName("低温")
         self.LowTemp_Button.setToolTip('日最低气温≤0℃')
         self.gridLayout_2.addWidget(self.LowTemp_Button, 0, 2, 1, 1)
-        self.HighTemp_Button = QtWidgets.QPushButton(self.gridFrame)
+        self.HighTemp_Button = NewPushButton(self.gridFrame)
         self.HighTemp_Button.setToolTip('日最高气温≥35℃')
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
@@ -610,7 +610,7 @@ class Meteo_DataService(QWidget):
 "color: rgb(255, 255, 255);\n"
 "\n"
 "}")
-        self.HighTemp_Button.setObjectName("HighTemp_Button")
+        self.HighTemp_Button.setObjectName("高温")
         self.gridLayout_2.addWidget(self.HighTemp_Button, 1, 0, 1, 1)
         self.HeavySnow_Button = NewPushButton(self.gridFrame)
         font = QtGui.QFont()
@@ -632,7 +632,7 @@ class Meteo_DataService(QWidget):
         self.HeavySnow_Button.setObjectName("暴雪")
         self.HeavySnow_Button.setToolTip('12小时:≥6mm\n24小时:≥10mm')
         self.gridLayout_2.addWidget(self.HeavySnow_Button, 1, 1, 1, 1)
-        self.BigWind_Button_2 = QtWidgets.QPushButton(self.gridFrame)
+        self.BigWind_Button_2 = NewPushButton(self.gridFrame)
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(10)
@@ -648,7 +648,7 @@ class Meteo_DataService(QWidget):
 "color: rgb(255, 255, 255);\n"
 "\n"
 "}")
-        self.BigWind_Button_2.setObjectName("BigWind_Button_2")
+        self.BigWind_Button_2.setObjectName("大雾")
         self.BigWind_Button_2.setToolTip('500~1000m')
         self.gridLayout_2.addWidget(self.BigWind_Button_2, 1, 2, 1, 1)
         self.label_4 = QtWidgets.QLabel(self.widget)
@@ -913,31 +913,63 @@ class Meteo_DataService(QWidget):
         self.Daily_tableWidget.itemSelectionChanged.connect(lambda: self.compute_choosen_values(self.Daily_tableWidget))
         self.buttonGroup.buttonToggled.connect(self.Preview)
         self.HeavyRain_Button.setCheckable(True)
-        # self.HeavyRain_Button.toggle()
-        sender_list=[]
         self.HeavyRain_Button.clicked.connect(self.ModeChange_Rain_Snow)
         self.HeavySnow_Button.clicked.connect(self.ModeChange_Rain_Snow)
-        # self.HeavyRain_Button.rightclicked.connect(self.Heavy_rain_12)
-
-
+        self.HeavyRain_Button.rightclicked.connect(self.ModeChange_Rain_Snow)
+        self.HeavySnow_Button.rightclicked.connect(self.ModeChange_Rain_Snow)
+        self.HighTemp_Button.clicked.connect(self.ModeChange_Temp_Wind_Fog)
+        self.LowTemp_Button.clicked.connect(self.ModeChange_Temp_Wind_Fog)
+        self.BigWind_Button.clicked.connect(self.ModeChange_Temp_Wind_Fog)
+        self.BigWind_Button_2.clicked.connect(self.ModeChange_Temp_Wind_Fog)
+        self.button_state.connect(self.temp_change)
+    def temp_change(self,string):
+        self.temp=string
+        print(self.temp)
+    temp = ''
+    button_state = QtCore.pyqtSignal(str)
     def ModeChange_Rain_Snow(self,string):
-        name_list={'暴雪':self.HeavySnow_Button,}
         sender =self.sender()
         default_text = sender.objectName()
         self.RainFall_CB.setChecked(1)
         self.Condition_Combox.setCurrentText('小时值')
-        if string=='1':
-            sender.setText('12h')
+        if string=='1' or string=='4':
+            sender.setText(default_text+'12h标准')
             self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(12))
             self.MinValue_LineEdit.setText(['30' if '雨' in default_text else '6'][0])
-        elif string=='2':
-            sender.setText('24h')
+            self.button_state.emit(default_text+'12h标准')
+        elif string=='2' or string=='5':
+            sender.setText(default_text+'24h标准')
             self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(24))
             self.MinValue_LineEdit.setText(['50' if '雨' in default_text else '10'][0])
-        elif string == '0' or sender.objectNameChanged():
+            self.button_state.emit(default_text + '24h标准')
+        elif string == '0' or string=='3':
             sender.setText(default_text)
+            self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(24))
             self.Hourly_tableWidget.itemClicked.disconnect()
             self.MinValue_LineEdit.setText('')
+            self.button_state.emit('')
+
+    def ModeChange_Temp_Wind_Fog(self,string):
+        button_xy = {'大风':5,'低温':2,'高温':1,'大雾':4}
+        sender=self.sender()
+        default_text = sender.objectName()
+        self.buttonGroup.button(button_xy[default_text]).setChecked(True)
+        self.Condition_Combox.setCurrentText(['小时值' if '风' in default_text else '日值'][0])
+        if (string=='1') or (string=='3') or (string=='5'):
+            sender.setText(sender.toolTip())
+            self.button_state.emit(sender.toolTip())
+            if  '≥' in sender.text():
+                self.MinValue_LineEdit.setText(sender.text().split('≥')[1][:2])
+            elif '≤' in sender.text():
+                self.MinValue_LineEdit_2.setText(sender.text().split('≤')[1][:2])
+            elif '~' in sender.text():
+                self.MinValue_LineEdit.setText(sender.text().split('~')[0])
+                self.MinValue_LineEdit_2.setText(sender.text().split('~')[1][:-1])
+        if string =='0' or string=='2' or string=='4':
+            sender.setText(default_text)
+            self.button_state.emit('')
+            self.MinValue_LineEdit.setText('')
+            self.MinValue_LineEdit_2.setText('')
 
 
     def items_auto_select(self,num):
@@ -994,17 +1026,23 @@ class Meteo_DataService(QWidget):
                 top_limit=99999
             else:
                 top_limit = float(self.MinValue_LineEdit_2.text())
-
+            DayOrHour = ['小时' if len(datetime_list[0]) > 12 else '天'][0]
             items_array = np.array(items_list)
+            print(items_array)
             datetime_array = np.array(datetime_list)
             tar_items_list = items_array[(bot_limit<=items_array)&(items_array<=top_limit)]
             tar_datetime_list = datetime_array[(bot_limit<=items_array)&(items_array<=top_limit)]
-            tar_datetime_list = [idatetime.split('-')[1]+'月'+idatetime.split('-')[2].split(' ')[0]+'日' if len(idatetime)<10
-        else idatetime.split('-')[2].split(' ')[0]+'日'+idatetime.split(' ')[1].replace(':00','时') for idatetime in tar_datetime_list ]
-            text_str =  '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}小时/天，满足{}大于等于{}小于等于{}的日数/小时数共有{}天/小时，具体为'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
-                                               count,self.buttonGroup.checkedButton().text(),self.MinValue_LineEdit.text()+unit,self.MinValue_LineEdit_2.text()+unit,len(tar_datetime_list))
-            for idatetime,item in zip(tar_datetime_list,tar_items_list):
-                text_str += ':'.join([idatetime,str(item)+','])
+            print(tar_datetime_list)
+            BiggerThanText= ['大于等于{}'.format(self.MinValue_LineEdit.text()+unit) if self.MinValue_LineEdit.text()!='' else ''][0]
+            SmallerThanText = ['小于等于{}'.format(self.MinValue_LineEdit_2.text()+unit) if self.MinValue_LineEdit_2.text()!='' else ''][0]
+
+            # tar_datetime_list = [idatetime.split('-')[1]+'月'+idatetime.split('-')[2].split(' ')[0]+'日' if len(idatetime)<10 else idatetime.split('-')[2].split(' ')[0]+'日'+idatetime.split(' ')[1].replace(':00','时') for idatetime in tar_datetime_list ]
+            text_str =  '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}{}，满足{}{}{}的{}数共计{}{}'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
+                                               count,DayOrHour,self.buttonGroup.checkedButton().text(),BiggerThanText,SmallerThanText,DayOrHour,len(tar_datetime_list),DayOrHour)
+            if len(tar_datetime_list)==0:
+                text_str+=',具体为:'
+                for idatetime,item in zip(tar_datetime_list,tar_items_list):
+                    text_str += ':'.join([idatetime,str(item)+','])
         self.textwindow = TextWindow(client,location,mdate,hdate,text_str)
         self.textwindow.show()
 
@@ -1319,25 +1357,32 @@ class NewPushButton(QtWidgets.QPushButton):
     # rightclicked = QtCore.pyqtSignal(str)  # 定义带参信号
     clicked1 = QtCore.pyqtSignal(bool)
     clicked = QtCore.pyqtSignal(str)
-
+    rightclicked = QtCore.pyqtSignal(str)
     def __init__(self, parent=None):
         super(QtWidgets.QPushButton, self).__init__(parent)
         self.clicked1.connect(self.count1)
         self.i=0
     def count1(self):
         self.i+=1
-        # print(self.i)
-        if self.i%3==0:
+        if self.i%6==0:
             self.clicked.emit('0')
-        elif self.i%3==1:
+        elif self.i%6==1:
             self.clicked.emit('1')
-        elif self.i%3 == 2:
+        elif self.i%6 == 2:
             self.clicked.emit('2')
+        elif self.i %6 == 3:
+            self.clicked.emit('3')
+        elif self.i%6==4:
+            self.clicked.emit('4')
+        elif self.i%6 == 5:
+            self.clicked.emit('5')
+
+
     def mousePressEvent(self,event):  # 重定义该函数，对不同的操作释放不同的信号参数
         if event.buttons() == Qt.LeftButton:
             self.clicked1.emit(True)
-        # if event.buttons() == Qt.RightButton:
-        #     self.clicked2.emit(True)
+        if event.buttons() == Qt.RightButton:
+            self.rightclicked.emit('0')
 
 
 
