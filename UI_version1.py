@@ -9,16 +9,18 @@
 
 import sys
 import datetime
+import numpy as np
 from time import sleep
+from PyQt5.QtCore import QUrl,Qt
 from selenium.webdriver import Chrome
+from PyQt5.QtGui import QDoubleValidator
+from PyQt5 import QtCore, QtGui, QtWidgets
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import QUrl,Qt
+from webdriver_manager.chrome import ChromeDriverManager
 from PyQt5.QtWidgets import QWidget,QApplication,QTableWidgetItem,QHeaderView,QMessageBox,QFileDialog
-import numpy as np
+
 from win32com import client as wc
 import pandas as pd
 import pickle
@@ -193,7 +195,7 @@ class Meteo_DataService(QWidget):
         self.Starttime_Label.setTextFormat(QtCore.Qt.MarkdownText)
         self.Starttime_Label.setObjectName("Starttime_Label")
         self.horizontalLayout_4.addWidget(self.Starttime_Label)
-        self.Starttime_DateEdit = QtWidgets.QDateTimeEdit(self.horizontalWidget_3)
+        self.Starttime_DateEdit = QtWidgets.QDateEdit(self.horizontalWidget_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -207,7 +209,7 @@ class Meteo_DataService(QWidget):
         self.Starttime_DateEdit.setFont(font)
         self.Starttime_DateEdit.setStyleSheet("border:2px solid;\n"
 "border-radius:8px")
-        self.Starttime_DateEdit.setDateTime(QtCore.QDateTime(QtCore.QDate(2020, 1, 1), QtCore.QTime(12, 0, 0)))
+        self.Starttime_DateEdit.setDate(QtCore.QDate.currentDate())
         self.Starttime_DateEdit.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(1930, 1, 1), QtCore.QTime(0, 0, 0)))
         self.Starttime_DateEdit.setCalendarPopup(True)
         self.Starttime_DateEdit.setObjectName("Starttime_DateEdit")
@@ -225,7 +227,7 @@ class Meteo_DataService(QWidget):
         self.Endtime_Label.setTextFormat(QtCore.Qt.MarkdownText)
         self.Endtime_Label.setObjectName("Endtime_Label")
         self.horizontalLayout_4.addWidget(self.Endtime_Label)
-        self.Endtime_DateEdit = QtWidgets.QDateTimeEdit(self.horizontalWidget_3)
+        self.Endtime_DateEdit = QtWidgets.QDateEdit(self.horizontalWidget_3)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -240,7 +242,7 @@ class Meteo_DataService(QWidget):
         self.Endtime_DateEdit.setFont(font)
         self.Endtime_DateEdit.setStyleSheet("border:2px solid;\n"
 "border-radius:8px")
-        self.Endtime_DateEdit.setDateTime(QtCore.QDateTime(QtCore.QDate(2020, 1, 1), QtCore.QTime(12, 0, 0)))
+        self.Endtime_DateEdit.setDate(QtCore.QDate.currentDate())
         self.Endtime_DateEdit.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(1930, 1, 1), QtCore.QTime(0, 0, 0)))
         self.Endtime_DateEdit.setCalendarPopup(True)
         self.Endtime_DateEdit.setObjectName("Endtime_DateEdit")
@@ -486,20 +488,20 @@ class Meteo_DataService(QWidget):
         self.label_5.setStyleSheet("border:none")
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_3.addWidget(self.label_5)
-        self.MinValue_LineEdit_2 = QtWidgets.QLineEdit(self.horizontalFrame_2)
+        self.MaxValue_LineEidt = QtWidgets.QLineEdit(self.horizontalFrame_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.MinValue_LineEdit_2.sizePolicy().hasHeightForWidth())
-        self.MinValue_LineEdit_2.setSizePolicy(sizePolicy)
-        self.MinValue_LineEdit_2.setMinimumSize(QtCore.QSize(0, 21))
-        self.MinValue_LineEdit_2.setStyleSheet("border:2px solid;\n"
+        sizePolicy.setHeightForWidth(self.MaxValue_LineEidt.sizePolicy().hasHeightForWidth())
+        self.MaxValue_LineEidt.setSizePolicy(sizePolicy)
+        self.MaxValue_LineEidt.setMinimumSize(QtCore.QSize(0, 21))
+        self.MaxValue_LineEidt.setStyleSheet("border:2px solid;\n"
 "border-radius:8px;\n"
 "font: 25 9pt \"Calibri Light\";")
-        self.MinValue_LineEdit_2.setValidator(QDoubleValidator())
-        self.MinValue_LineEdit_2.setText("")
-        self.MinValue_LineEdit_2.setObjectName("MinValue_LineEdit_2")
-        self.horizontalLayout_3.addWidget(self.MinValue_LineEdit_2)
+        self.MaxValue_LineEidt.setValidator(QDoubleValidator())
+        self.MaxValue_LineEidt.setText("")
+        self.MaxValue_LineEidt.setObjectName("MaxValue_LineEidt")
+        self.horizontalLayout_3.addWidget(self.MaxValue_LineEidt)
         self.ValueSet_Label = QtWidgets.QLabel(self.widget)
         self.ValueSet_Label.setGeometry(QtCore.QRect(250, 310, 81, 20))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
@@ -894,11 +896,11 @@ class Meteo_DataService(QWidget):
         self.Generate_Button.setText("文件生成")
         self.Preview_Button.setText("数据预览")
         self.Confirm_Button.setText("确认当前气象站点")
-        self.label_6.setText('min:')
-        self.label_8.setText('max:')
-        self.label_11.setText('sum:')
-        self.label_12.setText('avg:')
-        self.label_len.setText('count:')
+        self.label_6.setText('最小值:')
+        self.label_8.setText('最大值:')
+        self.label_11.setText('累计值:')
+        self.label_12.setText('平均值:')
+        self.label_len.setText('计数:')
 
         ##Button信号槽绑定
         self.Confirm_Button.clicked.connect(self.station_runjs)
@@ -906,13 +908,12 @@ class Meteo_DataService(QWidget):
         hdate = self.Starttime_DateEdit.date().toString('yyyy年MM月dd日')
         self.Generate_Button.clicked.connect(lambda: self.Generate(self.Client_LineEdit.text(),
                                                                    self.Usage_Combox.currentText(),self.Makedate_LineEdit.text(),
-                                                                  hdate))
+                                                                  hdate,self.Operator_Combox.currentText()))
         self.Preview_Button.clicked.connect(self.Preview)
 
         self.Hourly_tableWidget.itemSelectionChanged.connect(lambda:self.compute_choosen_values(self.Hourly_tableWidget))
         self.Daily_tableWidget.itemSelectionChanged.connect(lambda: self.compute_choosen_values(self.Daily_tableWidget))
         self.buttonGroup.buttonToggled.connect(self.Preview)
-        self.HeavyRain_Button.setCheckable(True)
         self.HeavyRain_Button.clicked.connect(self.ModeChange_Rain_Snow)
         self.HeavySnow_Button.clicked.connect(self.ModeChange_Rain_Snow)
         self.HeavyRain_Button.rightclicked.connect(self.ModeChange_Rain_Snow)
@@ -924,7 +925,7 @@ class Meteo_DataService(QWidget):
         self.button_state.connect(self.temp_change)
     def temp_change(self,string):
         self.temp=string
-        print(self.temp)
+
     temp = ''
     button_state = QtCore.pyqtSignal(str)
     def ModeChange_Rain_Snow(self,string):
@@ -933,15 +934,15 @@ class Meteo_DataService(QWidget):
         self.RainFall_CB.setChecked(1)
         self.Condition_Combox.setCurrentText('小时值')
         if string=='1' or string=='4':
-            sender.setText(default_text+'12h标准')
+            sender.setText(default_text+'12h')
             self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(12))
             self.MinValue_LineEdit.setText(['30' if '雨' in default_text else '6'][0])
-            self.button_state.emit(default_text+'12h标准')
+            self.button_state.emit(default_text+'12h')
         elif string=='2' or string=='5':
-            sender.setText(default_text+'24h标准')
+            sender.setText(default_text+'24h')
             self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(24))
             self.MinValue_LineEdit.setText(['50' if '雨' in default_text else '10'][0])
-            self.button_state.emit(default_text + '24h标准')
+            self.button_state.emit(default_text + '24h')
         elif string == '0' or string=='3':
             sender.setText(default_text)
             self.Hourly_tableWidget.itemClicked.connect(lambda: self.items_auto_select(24))
@@ -950,26 +951,28 @@ class Meteo_DataService(QWidget):
             self.button_state.emit('')
 
     def ModeChange_Temp_Wind_Fog(self,string):
-        button_xy = {'大风':5,'低温':2,'高温':1,'大雾':4}
+        button_xy_dict = {'大风':5,'低温':2,'高温':1,'大雾':4}
+        Min_Max_dict= {'暴雨12h':[30,''],'暴雨24h':[50,''],'大风':[17.2,''],
+                       '低温':['',0],'高温':[35,''],'暴雪12h':[6,''],'暴雪24h':[10,''],
+                       '大雾':[500,]}
         sender=self.sender()
         default_text = sender.objectName()
-        self.buttonGroup.button(button_xy[default_text]).setChecked(True)
+        self.buttonGroup.button(button_xy_dict[default_text]).setChecked(True)
         self.Condition_Combox.setCurrentText(['小时值' if '风' in default_text else '日值'][0])
         if (string=='1') or (string=='3') or (string=='5'):
             sender.setText(sender.toolTip())
-            self.button_state.emit(sender.toolTip())
-            if  '≥' in sender.text():
-                self.MinValue_LineEdit.setText(sender.text().split('≥')[1][:2])
-            elif '≤' in sender.text():
-                self.MinValue_LineEdit_2.setText(sender.text().split('≤')[1][:2])
-            elif '~' in sender.text():
-                self.MinValue_LineEdit.setText(sender.text().split('~')[0])
-                self.MinValue_LineEdit_2.setText(sender.text().split('~')[1][:-1])
+            self.button_state.emit(default_text)
+            if ('雨' in sender.text()) or ('雪' in sender.text()):
+                self.MinValue_LineEdit.setText(Min_Max_dict[sender.text()][0])
+                self.MinValue_LineEdit.setText(Min_Max_dict[sender.text()][1])
+            else:
+                self.MinValue_LineEdit.setText(Min_Max_dict[default_text][0])
+                self.MinValue_LineEdit.setText(Min_Max_dict[default_text][1])
         if string =='0' or string=='2' or string=='4':
             sender.setText(default_text)
             self.button_state.emit('')
             self.MinValue_LineEdit.setText('')
-            self.MinValue_LineEdit_2.setText('')
+            self.MaxValue_LineEidt.setText('')
 
 
     def items_auto_select(self,num):
@@ -985,7 +988,7 @@ class Meteo_DataService(QWidget):
                 self.Hourly_tableWidget.item(first_item_row+i,1).setSelected(True)
 
 
-    def Generate(self,client,location,mdate,hdate):
+    def Generate(self,client,location,mdate,hdate,operator):
         if self.Condition_Combox.currentText() =='日值':
             tablewidget= self.Daily_tableWidget
         else:
@@ -998,52 +1001,50 @@ class Meteo_DataService(QWidget):
             datetime_list = [tablewidget.item(row, 0).text() for row in range(tablewidget.rowCount())]
             items_list = [float(tablewidget.item(row, 1).text()) for row in range(tablewidget.rowCount())]
             QMessageBox.information(self, '提示', '请选中时段!')
-
-        if '气温' in self.buttonGroup.checkedButton().text():
-            unit = "℃"
-        elif '水' in self.buttonGroup.checkedButton().text():
-            unit = 'mm'
-        elif '风' in self.buttonGroup.checkedButton().text():
-            unit = 'm/s'
-        else:
-            unit = 'm'
+        unit_dict = {'最高气温':"℃",'最低气温':"℃",'整点气温':"℃",'降水':'mm','能见度':'m','极大风':'m/s'}
+        unit = unit_dict[self.buttonGroup.checkedButton().text()]
 
         min = self.min_label.text()+unit
         max = self.max_label.text()+unit
         avg = self.avg_label.text()+unit
         sum = self.sum_label.text() +unit
         count =self.len_label.text()
-        if (self.MinValue_LineEdit.text()=='') & (self.MinValue_LineEdit_2.text()==''):
+        if (self.MinValue_LineEdit.text()=='') & (self.MaxValue_LineEidt.text()==''):
             text_str = '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}小时/天，{}最小值为{}，最大值为{}，' \
                        '平均值为{}，累计值为{}。'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
                                                count,self.buttonGroup.checkedButton().text(),min,max,avg,sum)
-        elif (self.MinValue_LineEdit.text()!='') | (self.MinValue_LineEdit_2.text()!=''):
+        elif (self.MinValue_LineEdit.text()!='') | (self.MaxValue_LineEidt.text()!=''):
             if self.MinValue_LineEdit.text()=='':
                 bot_limit=-9999
             else:
                 bot_limit = float(self.MinValue_LineEdit.text())
-            if self.MinValue_LineEdit_2.text()=='':
+            if self.MaxValue_LineEidt.text()=='':
                 top_limit=99999
             else:
-                top_limit = float(self.MinValue_LineEdit_2.text())
+                top_limit = float(self.MaxValue_LineEidt.text())
             DayOrHour = ['小时' if len(datetime_list[0]) > 12 else '天'][0]
             items_array = np.array(items_list)
-            print(items_array)
             datetime_array = np.array(datetime_list)
             tar_items_list = items_array[(bot_limit<=items_array)&(items_array<=top_limit)]
             tar_datetime_list = datetime_array[(bot_limit<=items_array)&(items_array<=top_limit)]
-            print(tar_datetime_list)
             BiggerThanText= ['大于等于{}'.format(self.MinValue_LineEdit.text()+unit) if self.MinValue_LineEdit.text()!='' else ''][0]
-            SmallerThanText = ['小于等于{}'.format(self.MinValue_LineEdit_2.text()+unit) if self.MinValue_LineEdit_2.text()!='' else ''][0]
-
-            # tar_datetime_list = [idatetime.split('-')[1]+'月'+idatetime.split('-')[2].split(' ')[0]+'日' if len(idatetime)<10 else idatetime.split('-')[2].split(' ')[0]+'日'+idatetime.split(' ')[1].replace(':00','时') for idatetime in tar_datetime_list ]
-            text_str =  '根据查阅{}气象站点历史资料显示，{}至{}期间，连续{}{}，满足{}{}{}的{}数共计{}{}'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
-                                               count,DayOrHour,self.buttonGroup.checkedButton().text(),BiggerThanText,SmallerThanText,DayOrHour,len(tar_datetime_list),DayOrHour)
-            if len(tar_datetime_list)==0:
-                text_str+=',具体为:'
+            SmallerThanText = ['小于等于{}'.format(self.MaxValue_LineEidt.text()+unit) if self.MaxValue_LineEidt.text()!='' else ''][0]
+            StatisticText = '累计降水量为{}，'.format(sum)
+            CriticalText1 = [('{}'+'达到{}标准'.format(self.temp)).format(['未' if float(self.sum_label.text() )<float(self.MinValue_LineEdit.text()) else ''][0])][0]
+            print(CriticalText1)
+            MainText1 = StatisticText+CriticalText1
+            CriticalText2_sub = '(达到{}标准)'.format(self.temp)
+            CriticalText2 = [CriticalText2_sub if self.temp!='' else ''][0]
+            MainText2 = '满足{}{}{}{}的{}数共计{}{}'.format(self.buttonGroup.checkedButton().text(),BiggerThanText,SmallerThanText,CriticalText2,DayOrHour,len(tar_datetime_list),DayOrHour)
+            if len(tar_datetime_list)!=0:
+                MainText2+='，具体为:'
                 for idatetime,item in zip(tar_datetime_list,tar_items_list):
-                    text_str += ':'.join([idatetime,str(item)+','])
-        self.textwindow = TextWindow(client,location,mdate,hdate,text_str)
+                    MainText2+= ':'.join([idatetime,str(item)+unit+'，'])
+            MainText = [MainText1 if ('暴' in self.temp)&(self.Condition_Combox.currentText()=='小时值') else MainText2][0]
+            text_str =  '根据查阅{}气象站点资料显示，{}至{}期间，连续{}{}，{}。'.format(self.Station_LineEdit.text(),datetime_list[0],datetime_list[-1],
+                                               count,DayOrHour,MainText)
+
+        self.textwindow = TextWindow(client,location,mdate,hdate,text_str,operator)
         self.textwindow.show()
 
 
@@ -1060,7 +1061,7 @@ class Meteo_DataService(QWidget):
             print(e)
 
         self.selectedCon = self.Condition_Combox.currentText()
-        self.data_to_tablewidget(self.Hourly_tableWidget,self.hourdata,timestr="%Y.%m-%d_ %H:%M")
+        self.data_to_tablewidget(self.Hourly_tableWidget,self.hourdata,timestr="%Y.%m-%d_ %H?")
         self.data_to_tablewidget(self.Daily_tableWidget,self.daydata,timestr="%Y.%m-%d_")
 
 
@@ -1080,7 +1081,7 @@ class Meteo_DataService(QWidget):
         tablewidget.setRowCount(data.shape[0])
         self.selectedInfo = self.buttonGroup.checkedButton().text()
         for row in range(data.shape[0]):
-             newItem0 = QTableWidgetItem(data.index.tolist()[row].strftime(timestr).replace('.','年').replace('-','月').replace('_','日'))
+             newItem0 = QTableWidgetItem(data.index.tolist()[row].strftime(timestr).replace('.','年').replace('-','月').replace('_','日').replace('?','时'))
              newItem0.setFlags(Qt.ItemIsSelectable)
              newItem = QTableWidgetItem(data[self.selectedInfo].values[row])
              newItem.setTextAlignment(Qt.AlignCenter | Qt.AlignBottom)
@@ -1092,7 +1093,7 @@ class Meteo_DataService(QWidget):
         tablewidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
         tablewidget.horizontalHeader().setStretchLastSection(True)
     def Runpage(self):
-        self.browser = Chrome(executable_path="chromedriver.exe")
+        self.browser =Chrome(ChromeDriverManager().install())
         self.browser.set_window_size(3000, 2000)  # 设置窗口大小以保存
         self.browser.get("http://10.127.192.120/index.php")
         self.browser.find_element_by_xpath('/html/body/center/table[3]/tbody/tr[6]/td[1]/li[3]/a').click()
@@ -1102,6 +1103,7 @@ class Meteo_DataService(QWidget):
         self.Startdate = self.Starttime_DateEdit.date().toString("yyyy-MM-dd")
         self.Startdate1 = datetime.datetime.strptime(self.Startdate, '%Y-%m-%d') + datetime.timedelta(days=-1)
         self.Startdate1 = self.Startdate1.strftime("%Y-%m-%d")
+        print(self.Startdate1)
         self.Enddate = self.Endtime_DateEdit.date().toString("yyyy-MM-dd")
         hourindex = pd.date_range(start=self.Startdate1 + ' 21:00:00', end=self.Enddate + ' 20:00:00', freq='H')
         dayindex = pd.date_range(start=self.Startdate, end=self.Enddate, freq='D')
@@ -1201,7 +1203,6 @@ class TextWindow(QWidget):
         self.pushButton_savepath.setFont(font)
         self.pushButton_savepath.setObjectName("pushButton_savepath")
         self.horizontalLayout.addWidget(self.pushButton_savepath)
-        self.pushButton_savepath.clicked.connect(lambda:self.Savepath_button_click(args[0]))
         self.lineEdit_savepath = QtWidgets.QLineEdit(self.widget)
         self.lineEdit_savepath.setEnabled(True)
         font = QtGui.QFont()
@@ -1332,11 +1333,13 @@ class TextWindow(QWidget):
         self.label_3.setText("时间：")
         self.label_5.setText("地点：")
         self.label_4.setText("天气状况：")
+        self.pushButton_savepath.clicked.connect(lambda: self.Savepath_button_click(args[0]))
         self.lineEdit_date.setText(args[3])
         self.lineEdit_location.setText(args[1])
         self.textEdit_weatherCondition.setText(args[4])
+        self.operator=args[5]
         self.lineEdit_client.textChanged.connect(lambda: self.Client_changed(self.lineEdit_client.text()))
-
+        # self.pushButton.clicked(lambda:self.Generate_Word(self.lineEdit_location.text))
     def Client_changed(self,client):
         path0=self.lineEdit_savepath.text().split(os.sep)[0]
         path1 = self.lineEdit_savepath.text().split('.')[0].split(os.sep)[1][:10]
@@ -1352,6 +1355,8 @@ class TextWindow(QWidget):
         targetpath=tpath+number+client+'.docx'
         self.lineEdit_savepath.setText(targetpath)
         self.lineEdit_number.setText(str(datetime.datetime.now().year)+number)
+    def Generate_Word(self,args):
+        text.format(self.Operator_Combox.currentText())
 
 class NewPushButton(QtWidgets.QPushButton):
     # rightclicked = QtCore.pyqtSignal(str)  # 定义带参信号
