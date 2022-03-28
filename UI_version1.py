@@ -1151,7 +1151,7 @@ class Meteo_DataService(QWidget):
         self.Makedate_LineEdit.setText(str(self.NowDate))
 
 class TextWindow(QWidget):
-    def __init__(self,*args):
+    def __init__(self,client):
         super().__init__()
         self.setWindowTitle('内容编辑')
         self.resize(810, 378)
@@ -1359,7 +1359,6 @@ class TextWindow(QWidget):
         text.format(self.Operator_Combox.currentText())
 
 class NewPushButton(QtWidgets.QPushButton):
-    # rightclicked = QtCore.pyqtSignal(str)  # 定义带参信号
     clicked1 = QtCore.pyqtSignal(bool)
     clicked = QtCore.pyqtSignal(str)
     rightclicked = QtCore.pyqtSignal(str)
@@ -1381,7 +1380,6 @@ class NewPushButton(QtWidgets.QPushButton):
             self.clicked.emit('4')
         elif self.i%6 == 5:
             self.clicked.emit('5')
-
 
     def mousePressEvent(self,event):  # 重定义该函数，对不同的操作释放不同的信号参数
         if event.buttons() == Qt.LeftButton:
