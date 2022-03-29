@@ -10,10 +10,9 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 15">
 <meta name=Originator content="Microsoft Word 15">
-<link rel=File-List href="202202暴雪.files/filelist.xml">
 <!--[if gte mso 9]><xml>
  <o:DocumentProperties>
-  <o:Author>镇江市局文秘</o:Author>
+  <o:Author>{}</o:Author>
   <o:LastAuthor>DC</o:LastAuthor>
   <o:Revision>2</o:Revision>
   <o:TotalTime>4</o:TotalTime>

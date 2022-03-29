@@ -1151,7 +1151,7 @@ class Meteo_DataService(QWidget):
         self.Makedate_LineEdit.setText(str(self.NowDate))
 
 class TextWindow(QWidget):
-    def __init__(self,client):
+    def __init__(self,client,location,operator,):
         super().__init__()
         self.setWindowTitle('内容编辑')
         self.resize(810, 378)
