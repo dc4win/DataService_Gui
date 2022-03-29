@@ -11,12 +11,16 @@ import sys
 import datetime
 import numpy as np
 from time import sleep
+from docx import Document
+from docx.shared import Pt,RGBColor
+from docx.oxml.ns import qn
 from PyQt5.QtCore import QUrl,Qt
 from selenium.webdriver import Chrome
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5 import QtCore, QtGui, QtWidgets
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from webdriver_manager.chrome import ChromeDriverManager
 from PyQt5.QtWidgets import QWidget,QApplication,QTableWidgetItem,QHeaderView,QMessageBox,QFileDialog
@@ -1346,7 +1350,7 @@ class TextWindow(QWidget):
         self.lineEdit_location.setText(self.location)
         self.textEdit_weatherCondition.setText(self.text)
         self.lineEdit_client.textChanged.connect(self.Client_changed)
-        self.pushButton.clicked(lambda:self.Generate_Word(self.lineEdit_number.text(),self.lineEdit_client,self.lineEdit_location.text(),self.textEdit_weatherCondition.text(),self.lineEdit_date.text()))
+        self.pushButton.clicked.connect(lambda:self.Generate_Word(self.lineEdit_number.text(),self.lineEdit_client.text(),self.lineEdit_location.text(),self.textEdit_weatherCondition.toPlainText(),self.lineEdit_date.text()))
     def Client_changed(self):
         path0=self.lineEdit_savepath.text().split(os.sep)[0]
         path1 = self.lineEdit_savepath.text().split('.')[0].split(os.sep)[1][:10]
@@ -1364,7 +1368,26 @@ class TextWindow(QWidget):
         self.lineEdit_number.setText(str(datetime.datetime.now().year)+number)
 
     def Generate_Word(self,number,client,location,text,mdate):
-        self.TextExample=self.TextExample.format(number,client,self.hdate,location,text,client,mdate)
+        doc = Document()
+        def SetFontStyle(p, text, size, fontname,alignment,rgb):
+            alignment_dict = {'center':WD_PARAGRAPH_ALIGNMENT.CENTER}
+            p.alignment = alignment_dict[alignment]
+            run = p.add_run(text)
+            run.font.size = Pt(size)
+            run.font.bold=True
+            run.font.name = fontname
+            run.font.color.rgb = RGBColor(rgb[0], rgb[1], rgb[2])
+            r = run._element
+            r.rPr.rFonts.set(qn('w:eastAsia'), fontname)
+
+        p1 = doc.add_paragraph()
+        SetFontStyle(p1,text='气 象 证 明',size=36,fontname=u'方正小标宋_GBK',alignment='center',rgb=[255,0,0])
+        SetFontStyle(p1, text='气 象 ', size=36, fontname=u'方正小标宋_GBK', alignment='center', rgb=[255, 0, 0])
+        doc.save('aa.docx')
+
+
+
+
 
 
 class NewPushButton(QtWidgets.QPushButton):
