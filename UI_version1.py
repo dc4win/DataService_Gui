@@ -20,7 +20,7 @@ from PyQt5.QtGui import QDoubleValidator
 from PyQt5 import QtCore, QtGui, QtWidgets
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT,WD_LINE_SPACING
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from webdriver_manager.chrome import ChromeDriverManager
 from PyQt5.QtWidgets import QWidget,QApplication,QTableWidgetItem,QHeaderView,QMessageBox,QFileDialog
@@ -1369,20 +1369,27 @@ class TextWindow(QWidget):
 
     def Generate_Word(self,number,client,location,text,mdate):
         doc = Document()
-        def SetFontStyle(p, text, size, fontname,alignment,rgb):
+        def SetFontStyle(p, text, size, fontname,alignment,rgb,linespace=1.0,upspace =0,downspace=0,underline=False,bold=True,):
             alignment_dict = {'center':WD_PARAGRAPH_ALIGNMENT.CENTER}
             p.alignment = alignment_dict[alignment]
+            paragraph_format = p.paragraph_format
+            paragraph_format.space_after=Pt(upspace)
+            paragraph_format.space_before = Pt(downspace)
+            paragraph_format.line_spacing_rule = [WD_LINE_SPACING.EXACTLY if linespace !=1.0 else WD_LINE_SPACING.SINGLE][0]
+            paragraph_format.line_spacing = [Pt(linespace) if linespace !=1.0 else linespace][0]
             run = p.add_run(text)
             run.font.size = Pt(size)
-            run.font.bold=True
+            run.font.bold=bold
+            run.font.underline=underline
             run.font.name = fontname
             run.font.color.rgb = RGBColor(rgb[0], rgb[1], rgb[2])
             r = run._element
             r.rPr.rFonts.set(qn('w:eastAsia'), fontname)
 
         p1 = doc.add_paragraph()
+        p2 = doc.add_paragraph()
         SetFontStyle(p1,text='气 象 证 明',size=36,fontname=u'方正小标宋_GBK',alignment='center',rgb=[255,0,0])
-        SetFontStyle(p1, text='气 象 ', size=36, fontname=u'方正小标宋_GBK', alignment='center', rgb=[255, 0, 0])
+        SetFontStyle(p2, text='_____________________', size=14,linespace=10,fontname='Times New Roman', alignment='center', rgb=[255, 0, 0])
         doc.save('aa.docx')
 
 
