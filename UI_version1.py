@@ -1370,7 +1370,7 @@ class TextWindow(QWidget):
     def Generate_Word(self,number,client,location,text,mdate):
         doc = Document()
         def SetFontStyle(p, text, size, fontname,alignment,rgb,linespace=1.0,upspace =0,downspace=0,underline=False,bold=True,):
-            alignment_dict = {'center':WD_PARAGRAPH_ALIGNMENT.CENTER}
+            alignment_dict = {'center':WD_PARAGRAPH_ALIGNMENT.CENTER,'right':WD_PARAGRAPH_ALIGNMENT.RIGHT}
             p.alignment = alignment_dict[alignment]
             paragraph_format = p.paragraph_format
             paragraph_format.space_after=Pt(upspace)
@@ -1388,8 +1388,10 @@ class TextWindow(QWidget):
 
         p1 = doc.add_paragraph()
         p2 = doc.add_paragraph()
-        SetFontStyle(p1,text='气 象 证 明',size=36,fontname=u'方正小标宋_GBK',alignment='center',rgb=[255,0,0])
-        SetFontStyle(p2, text='_____________________', size=14,linespace=10,fontname='Times New Roman', alignment='center', rgb=[255, 0, 0])
+        p3 = doc.add_paragraph()
+        SetFontStyle(p1,text='气 象 证 明',size=36,linespace=50,fontname=u'方正小标宋_GBK',alignment='center',rgb=[255,0,0])
+        SetFontStyle(p2, text='——————————————', size=30,linespace=13,fontname='Times New Roman', alignment='center', rgb=[255, 0, 0])
+        SetFontStyle(p3,text='编号：'+number,size=16,fontname=u'仿宋_GB2312',linespace=28,bold=False,alignment='right',rgb=[0,0,0])
         doc.save('aa.docx')
 
 
